@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Domain.Entities;
-public class Update 
+namespace CleanArchitecture.Domain.Entities.Network;
+public class Update
 {
     public Guid Id { get; set; }
     public Update()
