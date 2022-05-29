@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class M1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -83,6 +83,19 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Keys", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Networks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IPAddress = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Networks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -230,6 +243,28 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Update",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdateName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TypeOfUpdate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PurposeOfUpdate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateUpdatedSent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MachineNetworkId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Update", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Update_Networks_MachineNetworkId",
+                        column: x => x.MachineNetworkId,
+                        principalTable: "Networks",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TodoItems",
                 columns: table => new
                 {
@@ -255,6 +290,80 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                         principalTable: "TodoLists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VendingMachine",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InService = table.Column<bool>(type: "bit", nullable: false),
+                    IsPerminatelyDeactivated = table.Column<bool>(type: "bit", nullable: false),
+                    NetworkId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MachineStatus = table.Column<int>(type: "int", nullable: false),
+                    UpdateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VendingMachine", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VendingMachine_Networks_NetworkId",
+                        column: x => x.NetworkId,
+                        principalTable: "Networks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_VendingMachine_Update_UpdateId",
+                        column: x => x.UpdateId,
+                        principalTable: "Update",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MachineRows",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RowNumberId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VendingMachineId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MachineRows", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MachineRows_VendingMachine_VendingMachineId",
+                        column: x => x.VendingMachineId,
+                        principalTable: "VendingMachine",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VendingMachineItem",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TypeOfSnack = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    RowNumberId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VendingMachineRowId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VendingMachineItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VendingMachineItem_MachineRows_VendingMachineRowId",
+                        column: x => x.VendingMachineRowId,
+                        principalTable: "MachineRows",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -313,6 +422,11 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                 column: "Use");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MachineRows_VendingMachineId",
+                table: "MachineRows",
+                column: "VendingMachineId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_ConsumedTime",
                 table: "PersistedGrants",
                 column: "ConsumedTime");
@@ -336,6 +450,26 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                 name: "IX_TodoItems_ListId",
                 table: "TodoItems",
                 column: "ListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Update_MachineNetworkId",
+                table: "Update",
+                column: "MachineNetworkId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VendingMachine_NetworkId",
+                table: "VendingMachine",
+                column: "NetworkId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VendingMachine_UpdateId",
+                table: "VendingMachine",
+                column: "UpdateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VendingMachineItem_VendingMachineRowId",
+                table: "VendingMachineItem",
+                column: "VendingMachineRowId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -368,6 +502,9 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                 name: "TodoItems");
 
             migrationBuilder.DropTable(
+                name: "VendingMachineItem");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -375,6 +512,18 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "TodoLists");
+
+            migrationBuilder.DropTable(
+                name: "MachineRows");
+
+            migrationBuilder.DropTable(
+                name: "VendingMachine");
+
+            migrationBuilder.DropTable(
+                name: "Update");
+
+            migrationBuilder.DropTable(
+                name: "Networks");
         }
     }
 }

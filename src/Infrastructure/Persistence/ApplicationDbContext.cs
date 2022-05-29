@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Domain.Entities;
+using CleanArchitecture.Domain.Entities.Items;
+using CleanArchitecture.Domain.Entities.Machines;
 using CleanArchitecture.Infrastructure.Identity;
 using CleanArchitecture.Infrastructure.Persistence.Interceptors;
 using Duende.IdentityServer.EntityFramework.Options;
@@ -30,6 +32,17 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<TodoList> TodoLists => Set<TodoList>();
 
     public DbSet<TodoItem> TodoItems => Set<TodoItem>();
+
+    public DbSet<DrinkMachine> DrinkMachines => Set<DrinkMachine>();
+    public DbSet<Drink> Drinks => Set<Drink>();
+
+    public DbSet<SnackMachine> SnackMachines => Set<SnackMachine>();
+
+    public DbSet<Snack> Snacks => Set<Snack>();
+
+    public DbSet<MachineNetwork> Networks => Set<MachineNetwork>();
+
+    public DbSet<VendingMachineRow> MachineRows => Set<VendingMachineRow>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -17,10 +17,137 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Items.VendingMachineItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("ItemPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("RowNumberId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TypeOfSnack")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("VendingMachineRowId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VendingMachineRowId");
+
+                    b.ToTable("VendingMachineItem");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("VendingMachineItem");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.MachineNetwork", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("IPAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Networks");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Machines.VendingMachine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("InService")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPerminatelyDeactivated")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MachineStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("NetworkId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UpdateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NetworkId");
+
+                    b.HasIndex("UpdateId");
+
+                    b.ToTable("VendingMachine");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("VendingMachine");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Machines.VendingMachineRow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("RowNumberId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("VendingMachineId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VendingMachineId");
+
+                    b.ToTable("MachineRows");
+                });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.TodoItem", b =>
                 {
@@ -97,6 +224,40 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TodoLists");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Update", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdatedSent")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("MachineNetworkId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PurposeOfUpdate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TypeOfUpdate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdateName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MachineNetworkId");
+
+                    b.ToTable("Update");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Infrastructure.Identity.ApplicationUser", b =>
@@ -442,6 +603,67 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Items.Drink", b =>
+                {
+                    b.HasBaseType("CleanArchitecture.Domain.Entities.Items.VendingMachineItem");
+
+                    b.HasDiscriminator().HasValue("Drink");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Items.Snack", b =>
+                {
+                    b.HasBaseType("CleanArchitecture.Domain.Entities.Items.VendingMachineItem");
+
+                    b.HasDiscriminator().HasValue("Snack");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Machines.DrinkMachine", b =>
+                {
+                    b.HasBaseType("CleanArchitecture.Domain.Entities.Machines.VendingMachine");
+
+                    b.HasDiscriminator().HasValue("DrinkMachine");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Machines.SnackMachine", b =>
+                {
+                    b.HasBaseType("CleanArchitecture.Domain.Entities.Machines.VendingMachine");
+
+                    b.HasDiscriminator().HasValue("SnackMachine");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Items.VendingMachineItem", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Entities.Machines.VendingMachineRow", null)
+                        .WithMany("MachineItems")
+                        .HasForeignKey("VendingMachineRowId");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Machines.VendingMachine", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Entities.MachineNetwork", "Network")
+                        .WithMany("VendingMachines")
+                        .HasForeignKey("NetworkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CleanArchitecture.Domain.Entities.Update", "Update")
+                        .WithMany()
+                        .HasForeignKey("UpdateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Network");
+
+                    b.Navigation("Update");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Machines.VendingMachineRow", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Entities.Machines.VendingMachine", null)
+                        .WithMany("MachineRows")
+                        .HasForeignKey("VendingMachineId");
+                });
+
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.TodoItem", b =>
                 {
                     b.HasOne("CleanArchitecture.Domain.Entities.TodoList", "List")
@@ -474,6 +696,13 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     b.Navigation("Colour")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Update", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Entities.MachineNetwork", null)
+                        .WithMany("UpdateHistory")
+                        .HasForeignKey("MachineNetworkId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -525,6 +754,23 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.MachineNetwork", b =>
+                {
+                    b.Navigation("UpdateHistory");
+
+                    b.Navigation("VendingMachines");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Machines.VendingMachine", b =>
+                {
+                    b.Navigation("MachineRows");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Machines.VendingMachineRow", b =>
+                {
+                    b.Navigation("MachineItems");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.TodoList", b =>
