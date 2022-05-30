@@ -27,8 +27,6 @@
       <Folder Include="VendingMachineRows\Commands\" />
       <Folder Include="VendingMachineRows\EventHandlers\" />
       <Folder Include="VendingMachineRows\Queries\" />
-      <Folder Include="VendingMachines\Commands\DisableVendingMachine\" />
-      <Folder Include="VendingMachines\Commands\UpdateVendingMachine\" />
       <Folder Include="VendingMachines\Queries\" />
     </ItemGroup>
 

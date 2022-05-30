@@ -108,7 +108,11 @@ public class VendingMachine : BaseEntity
 
     public void Maintenance() { MachineStatus = MachineStatus.Inactive; InService = false; }
 
-    public void PerminatelyDeactivateMachine() { MachineStatus = MachineStatus.Decativated; IsPerminatelyDeactivated = true; }
+    public void PerminatelyDeactivateMachine() 
+    { 
+        InService = false;
+        MachineStatus = MachineStatus.Decativated; IsPerminatelyDeactivated = true; 
+    }
 
 
 }
