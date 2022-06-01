@@ -7,5 +7,7 @@ using System.Threading.Tasks;
 namespace CleanArchitecture.Domain.Entities.Machines;
 public class DrinkMachine : VendingMachine
 {
-
+    public DrinkMachine(int rowsToCreate) : base(rowsToCreate)
+    {
+    }
 }

@@ -9,15 +9,17 @@ namespace CleanArchitecture.Domain.Entities.Machines;
 public class VendingMachine : BaseEntity
 {
     public new Guid Id { get; set; }
-    public VendingMachine()
+    public VendingMachine(int rowsToCreate)
     {
+        RowsToCreate = rowsToCreate;
         DateCreated = DateTime.Now;
         Activate();
         Update = SetFirstUpdate();
     }
-    public string Name { get; set; }
+    public int RowsToCreate{ get; set; }
+    public string? Name { get; set; }
     public DateTime DateCreated { get; private set; }
-    public string Location { get; set; }
+    public string? Location { get; set; }
     public bool InService { get; private set; }
     public bool IsPerminatelyDeactivated { get; private set; }
 
@@ -52,9 +54,9 @@ public class VendingMachine : BaseEntity
         //Foreach loop to set the RowNumberId
         foreach (var c in alphabet)
         {
-            VendingMachineRow v = new VendingMachineRow()
+            VendingMachineRow v = new VendingMachineRow(itemId, RowsToCreate)
             {
-                RowNumberId = c.ToString()
+                RowNumberId = c
             };
         }
     }

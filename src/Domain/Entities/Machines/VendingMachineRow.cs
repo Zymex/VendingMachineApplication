@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,13 +9,14 @@ using CleanArchitecture.Domain.Entities.Items;
 namespace CleanArchitecture.Domain.Entities.Machines;
 public class VendingMachineRow : BaseEntity
 {   
-    public string RowNumberId { get; set; }
+    public char RowNumberId { get; set; }
+    public int ItemsToList { get; set; }
     public List<VendingMachineItem> MachineItems { get; set; }
-    public VendingMachineRow()
+    public VendingMachineRow(char rowId, int itemsToList)
     {
-
+        RowNumberId = rowId;
         MachineItems = new List<VendingMachineItem>();
-
+        ItemsToList = itemsToList;
 
     }
 
@@ -27,25 +29,24 @@ public class VendingMachineRow : BaseEntity
             snack.RowNumberId = ReturnRowId() + i++;
         }
     }
-    public void CreateMachineRows(int rowCount)
+    public void CreateMachineRowItems()
     {
         //String to define row id char
-        var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var oldAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         //Build new list & set capacity
-        List<VendingMachineRow> machineRows = new List<VendingMachineRow>();
-        machineRows.Capacity = rowCount;
+        List<VendingMachineItem> machineRowItems = new List<VendingMachineItem>();
 
-        alphabet.ToList().Capacity = rowCount;
-
-        //Foreach loop to set the RowNumberId
-        foreach (var c in alphabet)
+        // Creates and initializes a new ArrayList.
+        ArrayList alphabet = new ArrayList();
+        foreach (var c in oldAlphabet)
         {
-            VendingMachineRow v = new VendingMachineRow()
-            {
-                RowNumberId = c.ToString()
-            };
+            alphabet.Add(c);
         }
+
+        // Create a fixed-size wrapper around the ArrayList.
+        ArrayList idAlphabetLetters = ArrayList.FixedSize(alphabet);        
+
     }
     public void SetUpItems(int itemCount, string typeOfSnack, string itemName, decimal price)
     {
@@ -58,7 +59,7 @@ public class VendingMachineRow : BaseEntity
                 v.ItemPrice = price;
                 v.TypeOfSnack = typeOfSnack;
                 v.ItemName = itemName;
-                v.RowNumberId = RowNumberId + i;
+                v.RowNumberId = RowNumberId.ToString() + i;
             }
             MachineItems.Add(v);
         }
@@ -66,6 +67,6 @@ public class VendingMachineRow : BaseEntity
     //We need this
     public string ReturnRowId()
     {
-        return RowNumberId;
+        return RowNumberId.ToString();
     }
 }

@@ -14,8 +14,8 @@ namespace CleanArchitecture.Application.VendingMachines.Commands.CreateVendingMa
 public record CreateDrinkMachineCommand : IRequest<Guid>
 {
     public Guid Id { get; set; }
-    public string Name { get; set; }
-    public string Location { get; set; }
+    public string? Name { get; set; }
+    public string? Location { get; set; }
 
 }
 public class CreateVendingMachineCommandHandler : IRequestHandler<CreateDrinkMachineCommand, Guid>

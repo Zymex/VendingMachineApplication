@@ -24,10 +24,7 @@
       <Folder Include="VendingMachineItems\Commands\" />
       <Folder Include="VendingMachineItems\EventHandlers\" />
       <Folder Include="VendingMachineItems\Queries\" />
-      <Folder Include="VendingMachineRows\Commands\" />
-      <Folder Include="VendingMachineRows\EventHandlers\" />
       <Folder Include="VendingMachineRows\Queries\" />
-      <Folder Include="VendingMachines\Queries\" />
     </ItemGroup>
 
 </Project>
