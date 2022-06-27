@@ -9,6 +9,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="WeatherForecasts\**" />
+      <EmbeddedResource Remove="WeatherForecasts\**" />
+      <None Remove="WeatherForecasts\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
         <PackageReference Include="DotNetCore.Domain" Version="16.35.0" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.4" />

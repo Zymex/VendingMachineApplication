@@ -30,9 +30,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
         _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
     }
 
-    public DbSet<TodoList> TodoLists => Set<TodoList>();
 
-    public DbSet<TodoItem> TodoItems => Set<TodoItem>();
 
     public DbSet<DrinkMachine> DrinkMachines => Set<DrinkMachine>();
     public DbSet<Drink> Drinks => Set<Drink>();

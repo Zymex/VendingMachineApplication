@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CleanArchitecture.Application.VendingMachines.EventHandlers;
-internalclass VendItemEventHandler
+class VendItemEventHandler
 {
 }
