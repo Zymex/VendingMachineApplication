@@ -12,7 +12,7 @@ public class SnackMachineBriefDto
     public string? Location { get; set; }
     public int CurrentRowsInMachine { get; set; }
     public string? MachineStatus { get; set; }
-    public string? IPAdress { get; set; }
+    public string? IPdAdress { get; set; }
 
 
 }

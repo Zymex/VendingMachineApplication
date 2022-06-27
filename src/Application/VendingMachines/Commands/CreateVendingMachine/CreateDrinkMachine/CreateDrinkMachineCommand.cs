@@ -28,7 +28,7 @@ public class CreateVendingMachineCommandHandler : IRequestHandler<CreateDrinkMac
 
     public async Task<Guid> Handle(CreateDrinkMachineCommand request, CancellationToken cancellationToken)
     {
-        var entity = new DrinkMachine
+        var entity = new DrinkMachine()
         {
             Id = request.Id,
             Name = request.Name,

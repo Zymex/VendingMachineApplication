@@ -11,9 +11,15 @@ public class VendingMachineRow : BaseEntity
 {   
     public char RowNumberId { get; set; }
     public int ItemsToList { get; set; }
+    public string SnackName { get; set; }
+    public decimal SnackPrice { get; set; }
+    public string SnackType { get; set; }
     public List<VendingMachineItem> MachineItems { get; set; }
-    public VendingMachineRow(char rowId, int itemsToList)
+    public VendingMachineRow(char rowId, int itemsToList, string snackName, decimal snackPrice)
     {
+        
+        SnackPrice = snackPrice;
+        SnackName = snackName;
         RowNumberId = rowId;
         MachineItems = new List<VendingMachineItem>();
         ItemsToList = itemsToList;
@@ -64,9 +70,23 @@ public class VendingMachineRow : BaseEntity
             MachineItems.Add(v);
         }
     }
-    //We need this
+
+    
+    /// <summary>
+    /// Whats required to vend an item
+    /// We need to be on an item row. 
+    /// RowID
+    /// We need a price and a qty to buy
+    /// After we vend. The items are removed from the array
+    /// Handle error checking if the qty is 0
+    /// 
+    /// </summary>
+
+
+   //We need this
     public string ReturnRowId()
     {
         return RowNumberId.ToString();
     }
+
 }

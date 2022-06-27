@@ -13,7 +13,7 @@ public class Tests
     [Test]
     public void CreateVendingMachineRow()
     {
-        VendingMachineRow vmr = new VendingMachineRow('A',10);
+        VendingMachineRow vmr = new VendingMachineRow('A',10,"TestSnack", 1.00M);
 
         vmr.CreateMachineRowItems();
         vmr.SetUpItems(vmr.ItemsToList, "Chips", "Doritos", 2.0m);

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CleanArchitecture.Domain.Entities.Items;
 using CleanArchitecture.Domain.Entities.Network;
 
 namespace CleanArchitecture.Domain.Entities.Machines;
 public class VendingMachine : BaseEntity
 {
     public new Guid Id { get; set; }
-    public VendingMachine(int rowsToCreate)
+    public VendingMachine()
     {
-        RowsToCreate = rowsToCreate;
         DateCreated = DateTime.Now;
         Activate();
         Update = SetFirstUpdate();
@@ -40,7 +40,7 @@ public class VendingMachine : BaseEntity
     //Get a count of total rows in machine 
     //Label them based alphanumerically
     //Validate Before
-    public void CreateMachineRows(char itemId, int rowCount)
+    public void CreateMachineRows(char itemId, int rowCount, string snackName, decimal snackPrice)
     {
         //String to define row id char
         var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -54,9 +54,9 @@ public class VendingMachine : BaseEntity
         //Foreach loop to set the RowNumberId
         foreach (var c in alphabet)
         {
-            VendingMachineRow v = new VendingMachineRow(itemId, RowsToCreate)
+            VendingMachineRow v = new(itemId, RowsToCreate, snackName, snackPrice)
             {
-                RowNumberId = c
+                RowNumberId = c,
             };
         }
     }
@@ -87,6 +87,7 @@ public class VendingMachine : BaseEntity
         }
     }
 
+
     public string ReturnIPAdress(MachineNetwork machineNetwork)
     {
         return machineNetwork.IPAddress;
@@ -103,7 +104,40 @@ public class VendingMachine : BaseEntity
         };
         return update;
     }
+    public string Vend(int qty, decimal moneyEntered, VendingMachineRow vendingRow)
+    {
 
+        var itemRow = vendingRow.MachineItems;
+
+        if (qty > vendingRow.MachineItems.Count)
+        {
+            throw new ItemsQtyOverMaxException(qty, MachineRows.Select(i => i.MachineItems).Count());
+        }
+        //Change to rep
+        var machineItemPrice = MachineRows.Select(x => x.SnackPrice).FirstOrDefault();
+
+        var snackName = vendingRow.SnackName;
+
+        var totalCostOfSnacks = machineItemPrice * qty;
+
+        if (moneyEntered < totalCostOfSnacks)
+        {
+            throw new TotalPriceExceedsMoneyException(totalCostOfSnacks, moneyEntered, snackName);
+        }
+        List<VendingMachineItem> snacksToRemove = new(qty);
+        VendingMachineItem vi = new VendingMachineItem();
+        for (int i = 0; i < qty; i++)
+        {
+            snacksToRemove.Add(vi);
+        }
+        foreach (var snack in snacksToRemove)
+        {
+            itemRow.Remove(snack);
+        }
+
+       var msg = $"{MachineRows.Select(x => x.MachineItems).Count().ToString()} {MachineRows.Select(x => x.SnackName).FirstOrDefault()} remain";
+        return msg;
+    }
 
     //Turn off ONLY if Machine is on a Network
     public void Activate() { MachineStatus = MachineStatus.Active; InService = false; }

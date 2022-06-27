@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CleanArchitecture.Application.VendingMachines.Queries.DrinkMachine;
-public class SnackMachineBriefDto
+public class DrinkMachineBriefDto
 {
     public Guid Id { get; set; }
     public string? Name { get; set; }
     public string? Location { get; set; }
     public int CurrentRowsInMachine { get; set; }
     public string? MachineStatus { get; set; }
-    public string? IPAdress { get; set; }
+    public string? IPAddress { get; set; }
 
 
 }
