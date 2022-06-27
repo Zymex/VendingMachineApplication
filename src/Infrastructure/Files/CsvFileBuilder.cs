@@ -1,24 +1,21 @@
-﻿using System.Globalization;
-using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Application.TodoLists.Queries.ExportTodos;
-using CleanArchitecture.Infrastructure.Files.Maps;
-using CsvHelper;
+﻿//using System.Globalization;
+//using CsvHelper;
 
-namespace CleanArchitecture.Infrastructure.Files;
+//namespace CleanArchitecture.Infrastructure.Files;
 
-public class CsvFileBuilder : ICsvFileBuilder
-{
-    public byte[] BuildTodoItemsFile(IEnumerable<TodoItemRecord> records)
-    {
-        using var memoryStream = new MemoryStream();
-        using (var streamWriter = new StreamWriter(memoryStream))
-        {
-            using var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
+//public class CsvFileBuilder : ICsvFileBuilder
+//{
+//    public byte[] BuildTodoItemsFile(IEnumerable<> records)
+//    {
+//        using var memoryStream = new MemoryStream();
+//        using (var streamWriter = new StreamWriter(memoryStream))
+//        {
+//            using var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
 
-            csvWriter.Configuration.RegisterClassMap<TodoItemRecordMap>();
-            csvWriter.WriteRecords(records);
-        }
+//            csvWriter.Configuration.RegisterClassMap<>();
+//            csvWriter.WriteRecords(records);
+//        }
 
-        return memoryStream.ToArray();
-    }
-}
+//        return memoryStream.ToArray();
+//    }
+//}
